@@ -126,42 +126,147 @@
       failed_when: false
 
   # ─── Timesketch ─────────────────────────────────────────────
-  # Deployed via Docker Compose (official method)
+  # Fully non-interactive deployment — replaces deploy_timesketch.sh
+  # The official script hangs waiting for interactive create-user input.
+  # We replicate exactly what the script does, idempotently.
 
-    - name: Create Timesketch working directory
+    - name: Create Timesketch data directory structure
       ansible.builtin.file:
-        path: /opt/timesketch
+        path: "{{ item }}"
         state: directory
         mode: '0755'
+      loop:
+        - /opt/timesketch
+        - /opt/timesketch/data
+        - /opt/timesketch/data/postgresql
+        - /opt/timesketch/data/opensearch
+        - /opt/timesketch/data/upload
+        - /opt/timesketch/data/logs
+        - /opt/timesketch/data/redis
 
-    - name: Download Timesketch Docker Compose setup script
+    - name: Set vm.max_map_count for OpenSearch (runtime)
+      ansible.posix.sysctl:
+        name: vm.max_map_count
+        value: '262144'
+        state: present
+        reload: true
+
+    - name: Persist vm.max_map_count in sysctl.conf
+      ansible.builtin.lineinfile:
+        path: /etc/sysctl.conf
+        line: 'vm.max_map_count=262144'
+        state: present
+
+    - name: Download Timesketch docker-compose.yml
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/google/timesketch/master/contrib/deploy_timesketch.sh
-        dest: /opt/timesketch/deploy_timesketch.sh
-        mode: '0755'
+        url: https://raw.githubusercontent.com/google/timesketch/master/docker/release/docker-compose.yml
+        dest: /opt/timesketch/docker-compose.yml
+        mode: '0644'
+        force: false
 
-    - name: Run Timesketch deployment script
-      ansible.builtin.shell: |
-        cd /opt/timesketch && bash deploy_timesketch.sh
-      args:
-        creates: /opt/timesketch/docker-compose.yml
-      environment:
-        DEBIAN_FRONTEND: noninteractive
+    - name: Download Timesketch config.env
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/google/timesketch/master/docker/release/config.env
+        dest: /opt/timesketch/config.env
+        mode: '0644'
+        force: false
 
-    - name: Start Timesketch via Docker Compose
+    - name: Download timesketch.conf
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/google/timesketch/master/data/timesketch.conf
+        dest: /opt/timesketch/timesketch.conf
+        mode: '0644'
+        force: false
+
+    - name: Download sigma_config.yaml
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/google/timesketch/master/data/sigma_config.yaml
+        dest: /opt/timesketch/sigma_config.yaml
+        mode: '0644'
+        force: false
+
+    - name: Download tags.yaml
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/google/timesketch/master/data/tags.yaml
+        dest: /opt/timesketch/tags.yaml
+        mode: '0644'
+        force: false
+
+    - name: Download nginx.conf
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/google/timesketch/master/contrib/nginx.conf
+        dest: /opt/timesketch/nginx.conf
+        mode: '0644'
+        force: false
+
+    - name: Generate random SECRET_KEY for Timesketch
       ansible.builtin.shell: |
-        cd /opt/timesketch && docker compose up -d
+        python3 -c "import secrets; print(secrets.token_hex(32))"
+      register: ts_secret_key
+      changed_when: false
+
+    - name: Generate random POSTGRES_PASSWORD for Timesketch
+      ansible.builtin.shell: |
+        python3 -c "import secrets; print(secrets.token_urlsafe(16))"
+      register: ts_postgres_password
+      changed_when: false
+
+    - name: Patch SECRET_KEY into timesketch.conf
+      ansible.builtin.replace:
+        path: /opt/timesketch/timesketch.conf
+        regexp: "^SECRET_KEY = '.*'"
+        replace: "SECRET_KEY = '{{ ts_secret_key.stdout }}'"
+
+    - name: Patch POSTGRES_PASSWORD into config.env
+      ansible.builtin.replace:
+        path: /opt/timesketch/config.env
+        regexp: '^POSTGRES_PASSWORD=.*'
+        replace: 'POSTGRES_PASSWORD={{ ts_postgres_password.stdout }}'
+
+    - name: Patch POSTGRES_PASSWORD into timesketch.conf connection string
+      ansible.builtin.replace:
+        path: /opt/timesketch/timesketch.conf
+        regexp: "postgresql\\+psycopg2://timesketch:.*@postgresql"
+        replace: "postgresql+psycopg2://timesketch:{{ ts_postgres_password.stdout }}@postgresql"
+
+    - name: Start Timesketch stack via Docker Compose
+      ansible.builtin.shell: |
+        docker compose up -d
       args:
         chdir: /opt/timesketch
       changed_when: true
+
+    - name: Wait for Timesketch web container to be healthy (up to 3 min)
+      ansible.builtin.shell: |
+        for i in $(seq 1 36); do
+          STATUS=$(docker inspect --format='{{.State.Health.Status}}' timesketch-web 2>/dev/null || echo "missing")
+          if [ "$STATUS" = "healthy" ] || [ "$STATUS" = "running" ]; then
+            echo "ready"; exit 0
+          fi
+          sleep 5
+        done
+        echo "timeout"; exit 1
+      register: ts_wait
+      changed_when: false
+      failed_when: ts_wait.stdout == "timeout"
+
+    - name: Create Timesketch admin user (non-interactive)
+      ansible.builtin.shell: |
+        docker compose exec -T timesketch-web \
+          tsctl create-user admin --password 'Forensics1!'
+      args:
+        chdir: /opt/timesketch
+      register: ts_createuser
+      changed_when: "'already exists' not in ts_createuser.stdout"
+      failed_when: false
 
   # ─── Jupyter Notebook ───────────────────────────────────────
   # Deployed via Docker for easy access on port 8888
 
     - name: Pull Jupyter minimal-notebook Docker image
-      community.docker.docker_image:
-        name: jupyter/minimal-notebook
-        source: pull
+      ansible.builtin.shell: |
+        docker pull quay.io/jupyter/minimal-notebook
+      changed_when: false
       failed_when: false
 
     - name: Create Jupyter notebooks directory
@@ -177,7 +282,7 @@
           version: "3"
           services:
             jupyter:
-              image: jupyter/minimal-notebook
+              image: quay.io/jupyter/minimal-notebook
               container_name: jupyter
               restart: unless-stopped
               ports:
