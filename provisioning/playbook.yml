@@ -8,7 +8,7 @@
 
   tasks:
 
-  # ─── Disable unattended-upgrades─────────────────────────────
+  # ─── Disable unattended-upgrades ────────────────────────────
 
     - name: Disable unattended-upgrades during provisioning
       ansible.builtin.systemd:
@@ -32,14 +32,15 @@
       changed_when: false
       failed_when: false
 
+  # ─── Base APT packages ──────────────────────────────────────
 
-
-    # apt packages
     - name: Install base packages
       ansible.builtin.apt:
         name:
           - python3
           - python3-pip
+          - python3-venv
+          - python3-dev
           - pipx
           - git
           - wget
@@ -47,8 +48,176 @@
           - unzip
           - zip
           - firefox
+          # Forensics tools
+          - dc3dd
+          # Docker dependencies
+          - ca-certificates
+          - gnupg
+          - lsb-release
+          - apt-transport-https
+          # ViperMonkey dependencies
+          - libxml2-dev
+          - libxslt1-dev
+          - zlib1g-dev
         state: present
         update_cache: 'yes'
+
+  # ─── Docker ─────────────────────────────────────────────────
+
+    - name: Create Docker apt keyring directory
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download Docker GPG key
+      ansible.builtin.shell: |
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+          | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        chmod a+r /etc/apt/keyrings/docker.gpg
+      args:
+        creates: /etc/apt/keyrings/docker.gpg
+
+    - name: Add Docker apt repository
+      ansible.builtin.shell: |
+        echo "deb [arch=$(dpkg --print-architecture) \
+          signed-by=/etc/apt/keyrings/docker.gpg] \
+          https://download.docker.com/linux/ubuntu \
+          $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+          > /etc/apt/sources.list.d/docker.list
+      args:
+        creates: /etc/apt/sources.list.d/docker.list
+
+    - name: Install Docker Engine
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: 'yes'
+
+    - name: Enable and start Docker service
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add user to docker group
+      ansible.builtin.user:
+        name: user
+        groups: docker
+        append: true
+
+  # ─── Plaso ──────────────────────────────────────────────────
+  # Installed via pipx for isolated, system-wide CLI access
+
+    - name: Install log2timeline/Plaso via pipx
+      ansible.builtin.shell: |
+        pipx install plaso
+        pipx ensurepath
+      environment:
+        PIPX_HOME: /opt/pipx
+        PIPX_BIN_DIR: /usr/local/bin
+      args:
+        creates: /usr/local/bin/log2timeline
+      failed_when: false
+
+  # ─── Timesketch ─────────────────────────────────────────────
+  # Deployed via Docker Compose (official method)
+
+    - name: Create Timesketch working directory
+      ansible.builtin.file:
+        path: /opt/timesketch
+        state: directory
+        mode: '0755'
+
+    - name: Download Timesketch Docker Compose setup script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/google/timesketch/master/contrib/deploy_timesketch.sh
+        dest: /opt/timesketch/deploy_timesketch.sh
+        mode: '0755'
+
+    - name: Run Timesketch deployment script
+      ansible.builtin.shell: |
+        cd /opt/timesketch && bash deploy_timesketch.sh
+      args:
+        creates: /opt/timesketch/docker-compose.yml
+      environment:
+        DEBIAN_FRONTEND: noninteractive
+
+    - name: Start Timesketch via Docker Compose
+      ansible.builtin.shell: |
+        cd /opt/timesketch && docker compose up -d
+      args:
+        chdir: /opt/timesketch
+      changed_when: true
+
+  # ─── Jupyter Notebook ───────────────────────────────────────
+  # Deployed via Docker for easy access on port 8888
+
+    - name: Pull Jupyter minimal-notebook Docker image
+      community.docker.docker_image:
+        name: jupyter/minimal-notebook
+        source: pull
+      failed_when: false
+
+    - name: Create Jupyter notebooks directory
+      ansible.builtin.file:
+        path: /opt/jupyter/notebooks
+        state: directory
+        mode: '0777'
+
+    - name: Create Jupyter Docker Compose file
+      ansible.builtin.copy:
+        dest: /opt/jupyter/docker-compose.yml
+        content: |
+          version: "3"
+          services:
+            jupyter:
+              image: jupyter/minimal-notebook
+              container_name: jupyter
+              restart: unless-stopped
+              ports:
+                - "8888:8888"
+              volumes:
+                - /opt/jupyter/notebooks:/home/jovyan/work
+              environment:
+                - JUPYTER_ENABLE_LAB=yes
+                - JUPYTER_TOKEN=forensics
+        mode: '0644'
+
+    - name: Start Jupyter via Docker Compose
+      ansible.builtin.shell: |
+        docker compose up -d
+      args:
+        chdir: /opt/jupyter
+      changed_when: true
+
+  # ─── ViperMonkey ────────────────────────────────────────────
+  # Installed via pipx from GitHub for system-wide vmonkey CLI
+
+    - name: Install ViperMonkey via pipx from GitHub
+      ansible.builtin.shell: |
+        pipx install git+https://github.com/decalage2/ViperMonkey.git
+        pipx ensurepath
+      environment:
+        PIPX_HOME: /opt/pipx
+        PIPX_BIN_DIR: /usr/local/bin
+      args:
+        creates: /usr/local/bin/vmonkey
+      failed_when: false
+
+  # ─── Shell PATH for pipx ────────────────────────────────────
+
+    - name: Ensure pipx bin dir is in system-wide PATH
+      ansible.builtin.copy:
+        dest: /etc/profile.d/pipx_path.sh
+        content: |
+          export PATH="/usr/local/bin:$PATH"
+        mode: '0644'
 
   # ─── Role ─────────────────────────────────────────────────────
   roles:
@@ -67,11 +236,9 @@
   become: true
 
   tasks:
-    # ─── APT packages ───────────────────────────────────────────
     - name: Print Image Ready
       debug:
         msg: "I am Ready!"
-
 
   # ─── Role ─────────────────────────────────────────────────────
   roles:
