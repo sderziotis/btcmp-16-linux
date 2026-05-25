@@ -1,0 +1,81 @@
+# ─────────────────────────────────────────────
+#  MACHINE 1 - uavm
+# ─────────────────────────────────────────────
+- name: init machine uavm
+  hosts:
+    - uavm
+  become: true
+
+  tasks:
+
+  # ─── Disable unattended-upgrades─────────────────────────────
+
+    - name: Disable unattended-upgrades during provisioning
+      ansible.builtin.systemd:
+        name: unattended-upgrades
+        state: stopped
+      failed_when: false
+
+    - name: Kill leftover apt/dpkg processes
+      ansible.builtin.shell: |
+        pkill -9 apt || true
+        pkill -9 dpkg || true
+      changed_when: false
+      failed_when: false
+
+    - name: Wait for apt lock to be released
+      ansible.builtin.shell: >
+        while fuser /var/lib/dpkg/lock-frontend /var/lib/apt/lists/lock \
+        /var/cache/apt/archives/lock /var/lib/dpkg/lock >/dev/null 2>&1; do
+          sleep 3
+        done
+      changed_when: false
+      failed_when: false
+
+
+
+    # apt packages
+    - name: Install base packages
+      ansible.builtin.apt:
+        name:
+          - python3
+          - python3-pip
+          - pipx
+          - git
+          - wget
+          - curl
+          - unzip
+          - zip
+          - firefox
+        state: present
+        update_cache: 'yes'
+
+  # ─── Role ─────────────────────────────────────────────────────
+  roles:
+    - role: user-access
+      user_access_username: user
+      user_access_password: 'Password123'
+      user_access_sudo: true
+
+
+# ─────────────────────────────────────────────
+#  MACHINE 2 - targetvm
+# ─────────────────────────────────────────────
+- name: init machine targetvm
+  hosts:
+    - targetvm
+  become: true
+
+  tasks:
+    # ─── APT packages ───────────────────────────────────────────
+    - name: Print Image Ready
+      debug:
+        msg: "I am Ready!"
+
+
+  # ─── Role ─────────────────────────────────────────────────────
+  roles:
+    - role: user-access
+      user_access_username: user
+      user_access_password: 'btcmp18@admin'
+      user_access_sudo: true
