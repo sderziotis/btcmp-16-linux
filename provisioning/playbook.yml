@@ -212,31 +212,35 @@
         mode: '0644'
         force: false
 
+    - name: Copy Timesketch secrets patch script to remote
+      ansible.builtin.copy:
+        dest: /opt/timesketch/patch_secrets.sh
+        mode: '0700'
+        content: |
+          #!/usr/bin/env bash
+          set -e
+          POSTGRES_PASSWORD="$(< /dev/urandom tr -dc A-Za-z0-9 | head -c 32)"
+          SECRET_KEY="$(< /dev/urandom tr -dc A-Za-z0-9 | head -c 32)"
+          OPENSEARCH_MEM_USE_GB=$(awk '/MemTotal/{printf "%.0f", $2/1024/1024/2}' /proc/meminfo)
+          [ "$OPENSEARCH_MEM_USE_GB" -lt 1 ] && OPENSEARCH_MEM_USE_GB=1
+
+          sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=${POSTGRES_PASSWORD}|" /opt/timesketch/config.env
+          sed -i "s|^OPENSEARCH_MEM_USE_GB=.*|OPENSEARCH_MEM_USE_GB=${OPENSEARCH_MEM_USE_GB}|" /opt/timesketch/config.env
+          sed -i "s|^TIMESKETCH_CONFIG_PATH=.*|TIMESKETCH_CONFIG_PATH=/opt/timesketch/etc/timesketch|" /opt/timesketch/config.env
+          sed -i "s|^TIMESKETCH_UPLOAD_PATH=.*|TIMESKETCH_UPLOAD_PATH=/opt/timesketch/upload|" /opt/timesketch/config.env
+          sed -i "s|^TIMESKETCH_LOGS_PATH=.*|TIMESKETCH_LOGS_PATH=/opt/timesketch/logs|" /opt/timesketch/config.env
+          sed -i "s|^OPENSEARCH_DATA_PATH=.*|OPENSEARCH_DATA_PATH=/opt/timesketch/data/opensearch|" /opt/timesketch/config.env
+          sed -i "s|^POSTGRES_DATA_PATH=.*|POSTGRES_DATA_PATH=/opt/timesketch/data/postgresql|" /opt/timesketch/config.env
+          sed -i "s|^NGINX_CONFIG_PATH=.*|NGINX_CONFIG_PATH=/opt/timesketch/etc/nginx.conf|" /opt/timesketch/config.env
+
+          sed -i "s|^SECRET_KEY = .*|SECRET_KEY = '${SECRET_KEY}'|" /opt/timesketch/etc/timesketch/timesketch.conf
+          sed -i "s|postgresql://timesketch:<PASSWORD>@localhost|postgresql://timesketch:${POSTGRES_PASSWORD}@postgres|g" /opt/timesketch/etc/timesketch/timesketch.conf
+          sed -i "s|postgresql+psycopg2://timesketch:.*@postgres|postgresql+psycopg2://timesketch:${POSTGRES_PASSWORD}@postgres|g" /opt/timesketch/etc/timesketch/timesketch.conf
+
+          touch /opt/timesketch/.secrets_patched
+
     - name: Generate secrets and patch config.env + timesketch.conf
-      ansible.builtin.shell: |
-        set -e
-        POSTGRES_PASSWORD="$(< /dev/urandom tr -dc A-Za-z0-9 | head -c 32)"
-        SECRET_KEY="$(< /dev/urandom tr -dc A-Za-z0-9 | head -c 32)"
-        OPENSEARCH_MEM_USE_GB=$(awk '/MemTotal/{printf "%.0f", $2/1024/1024/2}' /proc/meminfo)
-        # Minimum 1 GB so OpenSearch doesn't refuse to start
-        [ "$OPENSEARCH_MEM_USE_GB" -lt 1 ] && OPENSEARCH_MEM_USE_GB=1
-
-        # Patch config.env
-        sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=${POSTGRES_PASSWORD}|" /opt/timesketch/config.env
-        sed -i "s|^OPENSEARCH_MEM_USE_GB=.*|OPENSEARCH_MEM_USE_GB=${OPENSEARCH_MEM_USE_GB}|" /opt/timesketch/config.env
-
-        # Set all path variables in config.env
-        sed -i "s|^TIMESKETCH_CONFIG_PATH=.*|TIMESKETCH_CONFIG_PATH=/opt/timesketch/etc/timesketch|" /opt/timesketch/config.env
-        sed -i "s|^TIMESKETCH_UPLOAD_PATH=.*|TIMESKETCH_UPLOAD_PATH=/opt/timesketch/upload|" /opt/timesketch/config.env
-        sed -i "s|^TIMESKETCH_LOGS_PATH=.*|TIMESKETCH_LOGS_PATH=/opt/timesketch/logs|" /opt/timesketch/config.env
-        sed -i "s|^OPENSEARCH_DATA_PATH=.*|OPENSEARCH_DATA_PATH=/opt/timesketch/data/opensearch|" /opt/timesketch/config.env
-        sed -i "s|^POSTGRES_DATA_PATH=.*|POSTGRES_DATA_PATH=/opt/timesketch/data/postgresql|" /opt/timesketch/config.env
-        sed -i "s|^NGINX_CONFIG_PATH=.*|NGINX_CONFIG_PATH=/opt/timesketch/etc/nginx.conf|" /opt/timesketch/config.env
-
-        # Patch timesketch.conf
-        sed -i "s|^SECRET_KEY = .*|SECRET_KEY = '${SECRET_KEY}'|" /opt/timesketch/etc/timesketch/timesketch.conf
-        sed -i "s|postgresql://timesketch:<PASSWORD>@localhost|postgresql://timesketch:${POSTGRES_PASSWORD}@postgres|g" /opt/timesketch/etc/timesketch/timesketch.conf
-        sed -i "s|postgresql+psycopg2://timesketch:.*@postgres|postgresql+psycopg2://timesketch:${POSTGRES_PASSWORD}@postgres|g" /opt/timesketch/etc/timesketch/timesketch.conf
+      ansible.builtin.shell: /opt/timesketch/patch_secrets.sh
       args:
         creates: /opt/timesketch/.secrets_patched
       changed_when: true
