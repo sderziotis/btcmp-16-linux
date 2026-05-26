@@ -229,13 +229,15 @@
         state: present
       notify: Restart SSH
 
-  # ─── Second disk — deterministic Linux artifact content ──────
-  # Written once, guarded by .disk_written on the mounted fs.
-  # All file content is hardcoded/fixed — no timestamps from
-  # date/time calls — so dc3dd produces the same hash on every
-  # sandbox allocation.
+  # ─── Evidence disk image — deterministic Linux artifact content ─
+  # No Cinder volume needed. We create a 1 GB raw image file,
+  # format it ext4, loop-mount it, write all artifacts, then
+  # detach. Students image it with:
+  #   dc3dd if=/opt/evidence.img of=<dest> hash=sha256
+  # All file content is hardcoded — no dynamic timestamps —
+  # so the hash is identical on every sandbox allocation.
   #
-  # Layout (ext4 on /dev/sdb, label: evidence):
+  # Layout (ext4 image at /opt/evidence.img, label: evidence):
   #   home/user/.bash_history  .bashrc  .bash_logout
   #   var/log/syslog.1  auth.log.1  cron.log
   #   etc/crontab  passwd.bak
@@ -254,24 +256,27 @@
         state: directory
         mode: '0755'
 
-    - name: Check if evidence disk flag exists (idempotency)
-      ansible.builtin.shell: |
-        mount /dev/sdb /mnt/evidence 2>/dev/null || true
-        test -f /mnt/evidence/.disk_written && echo "done" || echo "needed"
-        umount /mnt/evidence 2>/dev/null || true
-      register: disk_check
-      changed_when: false
+    - name: Check if evidence image already written (idempotency)
+      ansible.builtin.stat:
+        path: /opt/evidence.img
+      register: evidence_img
 
-    - name: Create ext4 filesystem on /dev/sdb
+    - name: Create 1 GB raw evidence image file
       ansible.builtin.shell: |
-        mkfs.ext4 -F -L evidence /dev/sdb
-      when: disk_check.stdout == "needed"
+        dd if=/dev/zero of=/opt/evidence.img bs=1M count=1024
+      when: not evidence_img.stat.exists
       changed_when: true
 
-    - name: Mount /dev/sdb for content writing
+    - name: Format evidence image as ext4
       ansible.builtin.shell: |
-        mount /dev/sdb /mnt/evidence
-      when: disk_check.stdout == "needed"
+        mkfs.ext4 -F -L evidence /opt/evidence.img
+      when: not evidence_img.stat.exists
+      changed_when: true
+
+    - name: Mount evidence image via loop device
+      ansible.builtin.shell: |
+        mount -o loop /opt/evidence.img /mnt/evidence
+      when: not evidence_img.stat.exists
       changed_when: true
 
     - name: Create artifact directory structure
@@ -284,7 +289,7 @@
         - var/log
         - etc
         - tmp
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Write home/user/.bash_history
       ansible.builtin.copy:
@@ -301,7 +306,7 @@
           ./payload.sh
           rm -f payload.sh
           history -c
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Write home/user/.bashrc
       ansible.builtin.copy:
@@ -314,7 +319,7 @@
           export PS1='\u@\h:\w\$ '
           alias ll='ls -alF'
           alias la='ls -A'
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Write home/user/.bash_logout
       ansible.builtin.copy:
@@ -323,7 +328,7 @@
         content: |
           # ~/.bash_logout
           clear
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Write var/log/syslog.1
       ansible.builtin.copy:
@@ -338,7 +343,7 @@
           May 10 03:25:55 targetvm sshd[2001]: Disconnected from user user 192.168.0.10 port 54320
           May 10 04:01:01 targetvm CRON[2100]: (root) CMD (/usr/bin/python3 /opt/updater.py)
           May 10 04:17:01 targetvm CRON[2200]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Write var/log/auth.log.1
       ansible.builtin.copy:
@@ -354,7 +359,7 @@
           May 10 05:13:22 targetvm sshd[3001]: Failed password for invalid user admin from 10.10.10.5 port 22345 ssh2
           May 10 05:13:25 targetvm sshd[3001]: Failed password for invalid user admin from 10.10.10.5 port 22346 ssh2
           May 10 05:13:28 targetvm sshd[3001]: Failed password for invalid user root from 10.10.10.5 port 22347 ssh2
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Write var/log/cron.log
       ansible.builtin.copy:
@@ -365,7 +370,7 @@
           May 10 04:01:01 targetvm CRON[2100]: (root) CMD (/usr/bin/python3 /opt/updater.py)
           May 10 04:17:01 targetvm CRON[2200]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)
           May 10 05:01:01 targetvm CRON[2300]: (root) CMD (/usr/bin/python3 /opt/updater.py)
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Write etc/crontab
       ansible.builtin.copy:
@@ -378,7 +383,7 @@
           17 *    * * *   root    cd / && run-parts --report /etc/cron.hourly
           1  *    * * *   root    /usr/bin/python3 /opt/updater.py
           0  2    * * *   root    /usr/bin/find /tmp -mtime +1 -delete
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Write etc/passwd.bak
       ansible.builtin.copy:
@@ -390,7 +395,7 @@
           www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
           user:x:1000:1000:user,,,:/home/user:/bin/bash
           backdoor:x:0:0::/root:/bin/bash
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Write tmp/script.sh
       ansible.builtin.copy:
@@ -399,25 +404,25 @@
         content: |
           #!/bin/bash
           exec /usr/bin/python3 /opt/updater.py "$@"
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Stamp .disk_written flag (read-only)
       ansible.builtin.file:
         path: /mnt/evidence/.disk_written
         state: touch
         mode: '0444'
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
 
     - name: Sync and unmount evidence disk
       ansible.builtin.shell: |
         sync
         umount /mnt/evidence
-      when: disk_check.stdout == "needed"
+      when: not evidence_img.stat.exists
       changed_when: true
 
     - name: Print Image Ready
       ansible.builtin.debug:
-        msg: "targetvm ready. Evidence disk /dev/sdb written and unmounted."
+        msg: "targetvm ready. Evidence image /opt/evidence.img written and detached."
 
   # ─── Role ─────────────────────────────────────────────────────
   roles:
