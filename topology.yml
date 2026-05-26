@@ -15,7 +15,7 @@ hosts:
       mgmt_user: ubuntu
       mgmt_protocol: ssh
     hidden: true
-    extra_disks:
+    volumes:
       - size: 1
 routers:
   - name: router
