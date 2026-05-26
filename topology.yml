@@ -9,7 +9,7 @@ hosts:
       mgmt_protocol: ssh
     hidden: false
   - name: targetvm
-    flavor: c2_r4_d40
+    flavor: standard.medium
     base_box:
       image:  ubuntu-noble-x86_64
       mgmt_user: ubuntu
