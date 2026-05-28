@@ -201,28 +201,29 @@
 
   # ─── Mount Evidence Drive and Set READ ONLY ──────────
 
-   - name: Create mount point
+    - name: Download disk image from GitHub
+      ansible.builtin.get_url:
+        url: https://github.com/sderziotis/btcmp-16-linux/releases/download/v1/target_disk.img
+        dest: /tmp/target_disk.img
+
+    - name: Write image to second disk
+      ansible.builtin.command: dd if=/tmp/target_disk.img of=/dev/vdb bs=1M
+      args:
+        creates: /dev/vdb
+
+    - name: Create mount point
       ansible.builtin.file:
         path: /mnt/target_disc
         state: directory
         mode: '0755'
 
-    - name: Mount target disc read-only by label
+    - name: Mount read-only by label
       ansible.posix.mount:
         path: /mnt/target_disc
         src: LABEL="target disc"
         fstype: ext4
         opts: ro,noauto
         state: mounted
-
-    - name: Verify label is detected
-      ansible.builtin.command: blkid -L "target disc"
-      register: blkid_out
-      changed_when: false
-
-    - name: Show detected device
-      ansible.builtin.debug:
-        var: blkid_out.stdout
 
   # ─── SSH ────────────────────────────────────────────────────
 
