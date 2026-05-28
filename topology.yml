@@ -16,7 +16,7 @@ hosts:
       mgmt_protocol: ssh
     hidden: true
     volumes:
-      - size: 1
+      - size: 2
 routers:
   - name: router
     flavor: standard.small
