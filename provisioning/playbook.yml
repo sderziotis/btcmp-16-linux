@@ -199,6 +199,31 @@
 
   tasks:
 
+  # ─── Mount Evidence Drive and Set READ ONLY ──────────
+
+   - name: Create mount point
+      ansible.builtin.file:
+        path: /mnt/target_disc
+        state: directory
+        mode: '0755'
+
+    - name: Mount target disc read-only by label
+      ansible.posix.mount:
+        path: /mnt/target_disc
+        src: LABEL="target disc"
+        fstype: ext4
+        opts: ro,noauto
+        state: mounted
+
+    - name: Verify label is detected
+      ansible.builtin.command: blkid -L "target disc"
+      register: blkid_out
+      changed_when: false
+
+    - name: Show detected device
+      ansible.builtin.debug:
+        var: blkid_out.stdout
+
   # ─── SSH ────────────────────────────────────────────────────
 
     - name: Install openssh-server
