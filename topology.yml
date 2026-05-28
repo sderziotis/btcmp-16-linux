@@ -17,9 +17,7 @@ hosts:
     hidden: true
     volumes:
       - name: target-evidence-disk
-        url: https://github.com/sderziotis/btcmp-16-linux/releases/download/v1/target_disk.img
         size: 50
-        readonly: true
 
 routers:
   - name: router
