@@ -15,7 +15,7 @@ hosts:
       mgmt_user: ubuntu
       mgmt_protocol: ssh
     hidden: true
-    extra_disks:
+    volumes:
       - name: target-evidence-disk
         url: https://github.com/sderziotis/btcmp-16-linux/releases/download/v1/target_disk.img
         size: 50
