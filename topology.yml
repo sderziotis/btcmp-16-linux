@@ -15,8 +15,9 @@ hosts:
       mgmt_user: ubuntu
       mgmt_protocol: ssh
     hidden: true
-#    volumes:
-#      - size: 2
+    volumes:
+      - size: 8
+      - size: 2
 routers:
   - name: router
     flavor: standard.small
