@@ -15,6 +15,11 @@ hosts:
       mgmt_user: ubuntu
       mgmt_protocol: ssh
     hidden: true
+    extra_disks:
+      -name: target-evidence-disk
+        url: xxx
+        size: 50
+        readonly: true
 routers:
   - name: router
     flavor: standard.small
