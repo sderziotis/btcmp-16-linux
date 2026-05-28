@@ -17,7 +17,7 @@ hosts:
     hidden: true
     extra_disks:
       -name: target-evidence-disk
-        url: xxx
+        url: https://github.com/sderziotis/btcmp-16-linux/releases/download/v1/target_disk.img
         size: 50
         readonly: true
 routers:
