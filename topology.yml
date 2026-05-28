@@ -11,15 +11,16 @@ hosts:
   - name: targetvm
     flavor: standard.small
     base_box:
-      image:  ubuntu-noble-x86_64
+      image: ubuntu-noble-x86_64
       mgmt_user: ubuntu
       mgmt_protocol: ssh
     hidden: true
     extra_disks:
-    - name: target-evidence-disk
+      - name: target-evidence-disk
         url: https://github.com/sderziotis/btcmp-16-linux/releases/download/v1/target_disk.img
         size: 50
         readonly: true
+
 routers:
   - name: router
     flavor: standard.small
