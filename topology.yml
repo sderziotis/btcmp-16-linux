@@ -16,9 +16,7 @@ hosts:
       mgmt_protocol: ssh
     hidden: true
     volumes:
-      - name: target-evidence-disk
-        size: 50
-
+        size: 1
 routers:
   - name: router
     flavor: standard.small
