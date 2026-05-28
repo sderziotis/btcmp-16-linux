@@ -208,8 +208,6 @@
 
     - name: Write image to second disk
       ansible.builtin.command: dd if=/tmp/target_disk.img of=/dev/vdb bs=1M
-      args:
-        creates: /dev/vdb
 
     - name: Create mount point
       ansible.builtin.file:
