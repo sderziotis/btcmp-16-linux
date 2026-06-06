@@ -117,18 +117,18 @@
         url: https://github.com/sderziotis/btcmp-16-linux/releases/download/v1/forensic-lab.tar
         dest: /tmp/forensic-lab.tar
 
-    #- name: Load forensic Docker image
-    #  ansible.builtin.shell: |
-    #    docker load -i /tmp/forensic-lab.tar
+    - name: Load forensic Docker image
+      ansible.builtin.shell: |
+        docker load -i /tmp/forensic-lab.tar
 
-    #- name: Create forensic container (stopped)
-    #  ansible.builtin.shell: |
-    #    docker run --name forensic-container forensic-lab:latest echo "ready"
+    - name: Create forensic container (stopped)
+      ansible.builtin.shell: |
+        docker run --name forensic-container forensic-lab:latest echo "ready"
 
-    #- name: Remove tar file
-    #  ansible.builtin.file:
-    #    path: /tmp/forensic-lab.tar
-    #    state: absent
+    - name: Remove tar file
+      ansible.builtin.file:
+        path: /tmp/forensic-lab.tar
+        state: absent
 
   # ─── Jupyter Notebook ───────────────────────────────────────
   # Deployed via Docker for easy access on port 8888
