@@ -215,9 +215,11 @@
         value: 'false'
         vtype: boolean
 
-    - name: Install tshark
+    - name: Install tshark and wireshark
       ansible.builtin.apt:
-        name: tshark
+        name:
+          - tshark
+          - wireshark
         state: present
         update_cache: true
 
