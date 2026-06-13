@@ -111,7 +111,8 @@
         groups: docker
         append: true
 
- # ─── Download prebuilt docker container──────────
+  # ─── Download prebuilt docker container ─────────────────────
+
     - name: Download forensic Docker container tar
       ansible.builtin.get_url:
         url: https://github.com/sderziotis/btcmp-16-linux/releases/download/v1/forensic-lab.tar
@@ -185,28 +186,43 @@
         creates: /usr/local/bin/vmonkey
       failed_when: false
 
-# ─── Module 11 PCAP files ───────────────────────────────────
+  # ─── Module 10 PCAP files ───────────────────────────────────
 
-    - name: Create mod11 directory in user home
+    - name: Create df10 directory in user home
       ansible.builtin.file:
-        path: /home/user/mod11
+        path: /home/user/df10
         state: directory
         owner: user
         group: user
         mode: '0755'
 
-    - name: Copy mod11 pcap files to uavm
+    - name: Copy df10 pcap files to uavm
       ansible.builtin.copy:
-        src: "../files/mod11/pcap/{{ item }}"
-        dest: "/home/user/mod11/{{ item }}"
+        src: "../files/df10/pcap/fin-ws04-egress.pcap"
+        dest: "/home/user/df10/fin-ws04-egress.pcap"
         owner: user
         group: user
         mode: '0644'
-      loop:
-        - fin-ws04-egress.pcap
-        - incident.pcap
 
-  # ─── tshark + pyshark ───────────────────────────────────────
+  # ─── Module 11 PCAP files ───────────────────────────────────
+
+    - name: Create df11 directory in user home
+      ansible.builtin.file:
+        path: /home/user/df11
+        state: directory
+        owner: user
+        group: user
+        mode: '0755'
+
+    - name: Copy df11 pcap files to uavm
+      ansible.builtin.copy:
+        src: "../files/df11/pcap/incident.pcap"
+        dest: "/home/user/df11/incident.pcap"
+        owner: user
+        group: user
+        mode: '0644'
+
+  # ─── tshark + wireshark + pyshark ───────────────────────────
 
     - name: Pre-accept tshark suid prompt
       ansible.builtin.debconf:
@@ -229,23 +245,15 @@
         executable: pip3
         extra_args: --break-system-packages
 
-  # ─── winrm_decrypt.py background script ─────────────────────
+  # ─── winrm_decrypt.py (staged for trainee use) ──────────────
 
     - name: Copy winrm_decrypt.py to uavm
       ansible.builtin.copy:
-        src: ../files/mod11/scripts/winrm_decrypt.py
-        dest: /home/user/mod11/winrm_decrypt.py
+        src: ../files/scripts/winrm_decrypt.py
+        dest: /home/user/df11/winrm_decrypt.py
         owner: user
         group: user
         mode: '0755'
-
-    - name: Run winrm_decrypt.py in background
-      ansible.builtin.shell: |
-        nohup python3 /home/user/mod11/winrm_decrypt.py > /home/user/mod11/winrm_decrypt.log 2>&1 &
-      args:
-        chdir: /home/user/mod11
-      changed_when: true
-
 
   # ─── Shell PATH for pipx ────────────────────────────────────
 
@@ -256,7 +264,8 @@
           export PATH="/usr/local/bin:$PATH"
         mode: '0644'
 
-  # ─── Role ─────────────────────────────────────────────────────
+  # ─── Role ───────────────────────────────────────────────────
+
   roles:
     - role: user-access
       user_access_username: user
@@ -280,7 +289,7 @@
 
   tasks:
 
-  # ─── Mount Evidence Drive and Set READ ONLY ──────────
+  # ─── Mount Evidence Drive and Set READ ONLY ─────────────────
 
     - name: Download disk image from GitHub
       ansible.builtin.get_url:
@@ -334,7 +343,7 @@
         state: present
       notify: Restart SSH
 
-  # ─── APT packages ──────────────────────────────────────────
+  # ─── APT packages ───────────────────────────────────────────
 
     - name: Install forensics and network tools
       ansible.builtin.apt:
@@ -348,8 +357,8 @@
       ansible.builtin.debug:
         msg: "targetvm ready."
 
+  # ─── Role ───────────────────────────────────────────────────
 
-  # ─── Role ─────────────────────────────────────────────────────
   roles:
     - role: user-access
       user_access_username: user
