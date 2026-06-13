@@ -185,6 +185,66 @@
         creates: /usr/local/bin/vmonkey
       failed_when: false
 
+# ─── Module 11 PCAP files ───────────────────────────────────
+
+    - name: Create mod11 directory in user home
+      ansible.builtin.file:
+        path: /home/user/mod11
+        state: directory
+        owner: user
+        group: user
+        mode: '0755'
+
+    - name: Copy mod11 pcap files to uavm
+      ansible.builtin.copy:
+        src: "../files/mod11/pcap/{{ item }}"
+        dest: "/home/user/mod11/{{ item }}"
+        owner: user
+        group: user
+        mode: '0644'
+      loop:
+        - fin-ws04-egress.pcap
+        - incident.pcap
+
+  # ─── tshark + pyshark ───────────────────────────────────────
+
+    - name: Pre-accept tshark suid prompt
+      ansible.builtin.debconf:
+        name: wireshark-common
+        question: wireshark-common/install-setuid
+        value: 'false'
+        vtype: boolean
+
+    - name: Install tshark
+      ansible.builtin.apt:
+        name: tshark
+        state: present
+        update_cache: true
+
+    - name: Install pyshark via pip
+      ansible.builtin.pip:
+        name: pyshark
+        executable: pip3
+        extra_args: --break-system-packages
+
+  # ─── winrm_decrypt.py background script ─────────────────────
+
+    - name: Copy winrm_decrypt.py to uavm
+      ansible.builtin.copy:
+        src: ../files/mod11/scripts/winrm_decrypt.py
+        dest: /home/user/mod11/winrm_decrypt.py
+        owner: user
+        group: user
+        mode: '0755'
+
+    - name: Run winrm_decrypt.py in background
+      ansible.builtin.shell: |
+        nohup python3 /home/user/mod11/winrm_decrypt.py > /home/user/mod11/winrm_decrypt.log 2>&1 &
+      args:
+        chdir: /home/user/mod11
+      changed_when: true
+
+
   # ─── Shell PATH for pipx ────────────────────────────────────
 
     - name: Ensure pipx bin dir is in system-wide PATH
