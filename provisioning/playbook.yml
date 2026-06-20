@@ -203,6 +203,18 @@
         creates: /usr/local/bin/vmonkey
       failed_when: false
 
+  # ─── impacket ───────────────────────────────────────────────
+  # Installed via pipx for system-wide impacket CLI tools
+
+    - name: Install impacket via pipx
+      ansible.builtin.command: python3 -m pipx install impacket
+      environment:
+        PIPX_HOME: /opt/pipx
+        PIPX_BIN_DIR: /usr/local/bin
+      args:
+        creates: /usr/local/bin/secretsdump.py
+      failed_when: false
+
   # ─── Module 10 PCAP files ───────────────────────────────────
 
     - name: Create df10 directory in user home
