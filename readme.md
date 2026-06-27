@@ -1,6 +1,6 @@
 # BTCMP-16 — DF-4.2 Disk Image Acquisition (Linux)
 
-applied to: BTCMP-16-DF4.2  and DF4.3
+applied to: BTCMP-16-DF4.2 , DF4.3 , DF10, DF11, DF14-2
 
 | Field | Value |
 |---|---|
