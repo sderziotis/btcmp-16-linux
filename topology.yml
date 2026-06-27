@@ -1,5 +1,5 @@
 # Main topology
-name: btcmp-16-linux-main
+name: btcmp-16-linux-main-version2
 hosts:
   - name: uavm
     flavor: c2_r8_d40
