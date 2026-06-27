@@ -2,7 +2,7 @@
 name: btcmp-16-linux-main
 hosts:
   - name: uavm
-    flavor: c2_r4_d40
+    flavor: c2_r8_d40
     base_box:
       image: xubuntu-noble-x86_64
       mgmt_user: ubuntu

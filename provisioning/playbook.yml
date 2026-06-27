@@ -293,6 +293,113 @@
           export PATH="/usr/local/bin:$PATH"
         mode: '0644'
 
+
+  # ─── Timesketch (DF-14) ─────────────────────────────────────
+  # Deployed via the official helper script on top of the Docker
+  # engine already installed above. Brings up its own stack:
+  # OpenSearch + PostgreSQL + Redis + Timesketch web/worker + nginx.
+  #
+
+    - name: Set vm.max_map_count for OpenSearch
+      ansible.posix.sysctl:
+        name: vm.max_map_count
+        value: '262144'
+        state: present
+        sysctl_set: true
+        reload: true
+
+    - name: Download Timesketch deploy helper script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/google/timesketch/master/contrib/deploy_timesketch.sh
+        dest: /opt/deploy_timesketch.sh
+        mode: '0755'
+
+    # The script refuses to run if ./timesketch already exists, so the
+    # `creates:` guard makes this idempotent. We pipe "n" so the script
+    # writes all config files but does NOT auto-start the containers,
+    # which lets us tune OpenSearch memory before first boot.
+    - name: Generate Timesketch config (do not start containers yet)
+      ansible.builtin.shell: |
+        echo "n" | ./deploy_timesketch.sh --skip-create-user
+      args:
+        chdir: /opt
+        creates: /opt/timesketch/config.env
+
+    # The script defaults OpenSearch heap to HALF of host RAM (= 4 GB on
+    # an 8 GB box). That is too greedy next to the Xubuntu desktop,
+    # Firefox and the Jupyter container. 2 GB is plenty for this dataset.
+    - name: Cap OpenSearch heap at 2GB
+      ansible.builtin.lineinfile:
+        path: /opt/timesketch/config.env
+        regexp: '^OPENSEARCH_MEM_USE_GB='
+        line: 'OPENSEARCH_MEM_USE_GB=2'
+
+    - name: Start Timesketch stack
+      ansible.builtin.command: docker compose up -d
+      args:
+        chdir: /opt/timesketch
+      register: ts_compose_up
+      changed_when: "'Started' in ts_compose_up.stderr or 'Created' in ts_compose_up.stderr"
+
+    # Readiness probe via nginx instead of `docker inspect --format`
+    # (Go templates collide with Jinja2). 60 x 5s = up to 5 min.
+    - name: Wait for Timesketch web UI to respond
+      ansible.builtin.uri:
+        url: http://127.0.0.1/
+        status_code: [200, 302]
+        follow_redirects: none
+      register: ts_health
+      until: ts_health.status in [200, 302]
+      retries: 60
+      delay: 5
+
+    - name: Check existing Timesketch users
+      ansible.builtin.command: docker compose exec -T timesketch-web tsctl list-users
+      args:
+        chdir: /opt/timesketch
+      register: ts_users
+      changed_when: false
+
+    # create-user updates the password if the user already exists, but the
+    # `when:` keeps the run clean/idempotent. Password matches the uavm
+    # convention used elsewhere in this playbook — change if you prefer.
+    - name: Create trainee Timesketch user
+      ansible.builtin.command: >
+        docker compose exec -T timesketch-web
+        tsctl create-user trainee --password 'Password123'
+      args:
+        chdir: /opt/timesketch
+      when: "'trainee' not in ts_users.stdout"
+
+  # ─── DF-14 evidence (pre-staged for trainee ingestion) ──────
+  # Files are NOT auto-imported — uploading them into Timesketch IS the
+  # exercise. They just need to be present on disk. Filenames below must
+  # match whatever you placed under ../files/df14/.
+
+    - name: Create df14 directory in user home
+      ansible.builtin.file:
+        path: /home/user/df14
+        state: directory
+        owner: user
+        group: user
+        mode: '0755'
+
+    - name: Copy df14 plaso timeline to uavm
+      ansible.builtin.copy:
+        src: ../files/df14/timeline.plaso
+        dest: /home/user/df14/timeline.plaso
+        owner: user
+        group: user
+        mode: '0644'
+
+    - name: Copy df14 external events feed to uavm
+      ansible.builtin.copy:
+        src: ../files/df14/external-events.jsonl
+        dest: /home/user/df14/external-events.jsonl
+        owner: user
+        group: user
+        mode: '0644'
+
   # ─── Role ───────────────────────────────────────────────────
 
   roles:
