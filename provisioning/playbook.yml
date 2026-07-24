@@ -479,6 +479,22 @@
         state: present
       notify: Restart SSH
 
+   # ─── DF-4 Linux Log Analysis evidence- Achilleas changes ───────────────────────
+
+    - name: Create /var/log directory (ensure exists)
+      ansible.builtin.file:
+        path: /var/log
+        state: directory
+        mode: '0755'
+
+    - name: Deploy auth.log evidence file
+      ansible.builtin.copy:
+        src: ../files/df2/auth.log
+        dest: /var/log/auth.log
+        owner: root
+        group: adm
+        mode: '0640'
+  # Achilleas changes - finish
   # ─── APT packages ───────────────────────────────────────────
 
     - name: Install forensics and network tools
