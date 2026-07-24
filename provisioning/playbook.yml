@@ -215,6 +215,32 @@
         creates: /usr/local/bin/secretsdump.py
       failed_when: false
 
+  # ─── Module Windows Log Analysis evidence files─────────────────────
+
+    - name: Create df2 directory in user home
+      ansible.builtin.file:
+        path: /home/user/df2
+        state: directory
+        owner: user
+        group: user
+        mode: '0755'
+
+    - name: Copy df2 Windows Security log export to uavm
+      ansible.builtin.copy:
+        src: ../files/df2/Security-Export.csv
+        dest: /home/user/df2/Security-Export.csv
+        owner: user
+        group: user
+        mode: '0644'
+
+    - name: Copy df2 Windows Security events dump to uavm
+      ansible.builtin.copy:
+        src: ../files/df2/Security-Events.txt
+        dest: /home/user/df2/Security-Events.txt
+        owner: user
+        group: user
+        mode: '0644'
+      
   # ─── Module 10 PCAP files ───────────────────────────────────
 
     - name: Create df10 directory in user home
