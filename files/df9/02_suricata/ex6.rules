@@ -1,0 +1,1 @@
+alert http any any -> any any (msg:"EX6 NIGHTJAR beacon"; flow:established,to_server; http.method; content:"POST"; http.uri; content:"/api/v2/telemetry"; startswith; classtype:trojan-activity; sid:1000006; rev:1;)

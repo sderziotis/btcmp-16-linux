@@ -1,0 +1,5 @@
+# Get-DiskReport.ps1 - reads the base64-packed threshold config
+$cfg = "eyJ3YXJuIjo4MCwiY3JpdCI6OTB9"
+$json = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($cfg))
+$t = $json | ConvertFrom-Json
+Get-Volume | Where-Object { $_.SizeRemaining / $_.Size * 100 -lt $t.crit }

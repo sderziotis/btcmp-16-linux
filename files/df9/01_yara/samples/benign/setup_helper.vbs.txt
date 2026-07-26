@@ -1,0 +1,5 @@
+' setup_helper.vbs - maps the departmental printer at logon
+Set sh = CreateObject("WScript.Shell")
+Set net = CreateObject("WScript.Network")
+net.AddWindowsPrinterConnection "\\printsrv02\HP-4th-Floor"
+sh.RegWrite "HKCU\Software\Corp\PrinterMapped", 1, "REG_DWORD"
