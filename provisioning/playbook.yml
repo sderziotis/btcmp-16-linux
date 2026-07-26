@@ -67,6 +67,9 @@
           - firefox
           # Forensics tools
           - dc3dd
+          - yara
+          - suricata
+          - snort
           # Docker dependencies
           - ca-certificates
           - gnupg
@@ -426,6 +429,44 @@
         group: user
         mode: '0644'
 
+# ─── Module 9 (DF-9) ─── Achilleas edit
+
+    - name: Stop and disable IDS daemons
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: stopped
+        enabled: false
+      loop:
+        - suricata
+        - snort
+        - snortd
+      failed_when: false
+
+    - name: Create df9 directory in user home
+      ansible.builtin.file:
+        path: /home/user/df9
+        state: directory
+        owner: user
+        group: user
+        mode: '0755'
+
+    - name: Copy df9 files to uavm
+      ansible.builtin.copy:
+        src: ../files/df9/
+        dest: /home/user/df9/
+        owner: user
+        group: user
+        mode: '0644'
+        directory_mode: '0755'
+
+    - name: Make df9 helper script executable
+      ansible.builtin.file:
+        path: /home/user/df9/pcapgrep.py
+        owner: user
+        group: user
+        mode: '0755'
+
+        
   # ─── Role ───────────────────────────────────────────────────
 
   roles:
