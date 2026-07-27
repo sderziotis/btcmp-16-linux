@@ -1,0 +1,12 @@
+# Clears application event log entries older than 90 days
+# OPS-4471 - approved by change board
+
+$MaxAge = (Get-Date).AddDays(-90)
+$logs   = @("Application","System")
+
+foreach ($log in $logs) {
+    Get-EventLog -LogName $log -ErrorAction SilentlyContinue |
+        Where-Object { $_.TimeGenerated -lt $MaxAge } |
+        ForEach-Object { Remove-EventLog -LogName $log -ErrorAction SilentlyContinue }
+}
+Write-EventLog -LogName Application -Source "OpsCleanup" -EventId 2000 -Message "Log cleanup done"

