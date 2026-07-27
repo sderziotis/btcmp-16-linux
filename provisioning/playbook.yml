@@ -459,13 +459,6 @@
         mode: '0644'
         directory_mode: '0755'
 
-    - name: Make df9 helper script executable
-      ansible.builtin.file:
-        path: /home/user/df9/pcapgrep.py
-        owner: user
-        group: user
-        mode: '0755'
-
         
   # ─── Role ───────────────────────────────────────────────────
 
