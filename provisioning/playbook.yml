@@ -192,19 +192,63 @@
         chdir: /opt/jupyter
       changed_when: true
 
-  # ─── ViperMonkey ────────────────────────────────────────────
-  # Installed via pipx from GitHub for system-wide vmonkey CLI
+  # ─── ViperMonkey (DF-13.3: canonical PyPy build) ────────────
+  # The pipx `master` build (system Python 3) crashes on import and CANNOT
+  # decode the DF-13.3 maldoc (filetype ord() on int; grammar
+  # "Sub ... Expected end of text"). Use the canonical upstream image
+  # (ViperMonkey under PyPy 2.7) behind a `vmonkey` wrapper instead, and add
+  # oletools (olevba/oleid/mraptor) for triage.
 
-    - name: Install ViperMonkey via pipx from GitHub
+    - name: Install oletools (olevba, oleid, mraptor) via pipx
       ansible.builtin.shell: |
-        pipx install git+https://github.com/decalage2/ViperMonkey.git
+        pipx install oletools
         pipx ensurepath
       environment:
         PIPX_HOME: /opt/pipx
         PIPX_BIN_DIR: /usr/local/bin
       args:
-        creates: /usr/local/bin/vmonkey
+        creates: /usr/local/bin/olevba
       failed_when: false
+
+    - name: Create vmonkey image build dir (transient; removed below)
+      ansible.builtin.file:
+        path: /opt/vmonkey
+        state: directory
+        mode: '0755'
+
+    - name: Dockerfile for the canonical ViperMonkey (+ colorama)
+      ansible.builtin.copy:
+        dest: /opt/vmonkey/Dockerfile
+        content: |
+          FROM haroldogden/vipermonkey:latest
+          RUN pypy -m pip install colorama
+          WORKDIR /work
+          ENTRYPOINT ["pypy","/opt/ViperMonkey/vipermonkey/vmonkey.py"]
+        mode: '0644'
+
+    - name: Build the working vmonkey image (idempotent)
+      ansible.builtin.shell: |
+        docker image inspect vmonkey-canonical:latest >/dev/null 2>&1 \
+          || docker build -t vmonkey-canonical:latest /opt/vmonkey
+      changed_when: false
+
+    - name: Remove the vmonkey build dir (no build artifact left in /opt)
+      ansible.builtin.file:
+        path: /opt/vmonkey
+        state: absent
+
+    - name: Install a working `vmonkey` wrapper on PATH
+      ansible.builtin.copy:
+        dest: /usr/local/bin/vmonkey
+        content: |
+          #!/bin/bash
+          # Canonical ViperMonkey (PyPy). Runs the target file inside the
+          # container, mounting its directory as /work.
+          set -e
+          f="${1:?usage: vmonkey <file>}"
+          d="$(cd "$(dirname "$f")" && pwd)"; b="$(basename "$f")"
+          exec docker run --rm -v "$d":/work vmonkey-canonical:latest "$b"
+        mode: '0755'
 
   # ─── impacket ───────────────────────────────────────────────
   # Installed via pipx for system-wide impacket CLI tools
@@ -461,6 +505,82 @@
 
         
   # ─── Role ───────────────────────────────────────────────────
+
+  # ─── Module 13.3 (DF-13.3) APT10 / Red Apollo maldoc analysis ─
+  # Analysis-only delta on uavm (no topology change). Stages the maldoc, and
+  # stands up a tiny "paste" service on its OWN docker bridge IP so the URL
+  # decoded from the macro resolves in-range WITHOUT taking host port 80
+  # (Timesketch already owns :80). The served content is BAKED INTO an image
+  # (Dockerfile.paste) and the build context is deleted afterwards, so no
+  # readable copy of the payload / paste id is left on the uavm filesystem.
+  # (A docker-admin trainee can still `docker exec paste cat ...` — accepted;
+  # see the module's files/README.md "Range integrity" note.) C2 kept dead.
+
+    - name: Create df13 directory in user home
+      ansible.builtin.file:
+        path: /home/user/df13
+        state: directory
+        owner: user
+        group: user
+        mode: '0755'
+
+    - name: Copy the DF-13.3 maldoc to uavm
+      ansible.builtin.copy:
+        src: ../files/df13/Remittance_Advice_Q3.doc
+        dest: /home/user/df13/Remittance_Advice_Q3.doc
+        owner: user
+        group: user
+        mode: '0644'
+
+    - name: Create the paste service BUILD context (transient; removed below)
+      ansible.builtin.file:
+        path: /opt/paste
+        state: directory
+        owner: root
+        group: root
+        mode: '0700'
+
+    - name: Stage the paste build context (Dockerfile, nginx config, payload, compose)
+      ansible.builtin.copy:
+        src: "../files/df13/paste/{{ item.src }}"
+        dest: "/opt/paste/{{ item.dest }}"
+        owner: root
+        group: root
+        mode: '0600'
+      loop:
+        - { src: Dockerfile.paste, dest: Dockerfile }
+        - { src: paste-nginx.conf, dest: paste-nginx.conf }
+        - { src: stage2.ps1, dest: stage2.ps1 }
+        - { src: docker-compose.paste.yml, dest: docker-compose.yml }
+
+    - name: Build the paste image with the content baked in (idempotent)
+      ansible.builtin.shell: |
+        docker image inspect paste-local:latest >/dev/null 2>&1 \
+          || docker build -t paste-local:latest /opt/paste
+      changed_when: false
+
+    - name: Start the paste service (own bridge IP, no host port published)
+      ansible.builtin.command: docker compose up -d
+      args:
+        chdir: /opt/paste
+      changed_when: true
+
+    - name: Remove the paste build context (no host-side copy of the served files)
+      ansible.builtin.file:
+        path: /opt/paste
+        state: absent
+
+    - name: Map the macro-decoded hostname to the paste container IP
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "172.28.0.10 raw.pastebox.lab"
+        state: present
+
+    - name: Null-route the (dead) C2 FQDN so it can never connect
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "0.0.0.0 update.microsofts-sync.com"
+        state: present
 
   roles:
     - role: user-access

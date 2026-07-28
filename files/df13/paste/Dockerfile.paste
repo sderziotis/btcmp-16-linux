@@ -1,0 +1,18 @@
+# DF-13.3 "paste" service image.
+#
+# The served content (nginx config + stage2.ps1) is BAKED INTO the image via
+# COPY — the runtime container bind-mounts NOTHING. That lets the provisioning
+# play delete the host-side source files after the build, so a trainee with a
+# shell on uavm cannot `ls`/`cat` them under /opt (they used to sit there
+# world-readable, which leaked the Level-5 paste id from the nginx config).
+#
+# KNOWN LIMITATION (documented, accepted): the trainee `user` on uavm is in the
+# docker group AND has sudo, so they can still reach the content out of the
+# RUNNING container: `docker exec paste cat /etc/nginx/nginx.conf` (reveals the
+# paste id) or `docker cp paste:/srv/paste/stage2.ps1 .`. Nothing local can stop
+# a docker-admin on the same host. Making it truly unreachable requires hosting
+# the service off-uavm (a hidden WAN node with no trainee login) — a topology
+# change deliberately not taken here.
+FROM nginx:alpine
+COPY paste-nginx.conf /etc/nginx/nginx.conf
+COPY stage2.ps1 /srv/paste/stage2.ps1
