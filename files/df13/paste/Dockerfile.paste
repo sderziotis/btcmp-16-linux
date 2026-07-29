@@ -16,3 +16,9 @@
 FROM nginx:alpine
 COPY paste-nginx.conf /etc/nginx/nginx.conf
 COPY stage2.ps1 /srv/paste/stage2.ps1
+# The provisioning play stages the build-context files as mode 0600 (root-only,
+# to keep them unreadable on the host). `docker COPY` PRESERVES that mode, so the
+# baked files land 0600 root:root — and the nginx WORKER runs as the unprivileged
+# `nginx` user, which then gets EACCES and returns HTTP 403 on the served file.
+# Make the baked files readable by the worker (traversal dir /srv/paste is 0755).
+RUN chmod 0644 /etc/nginx/nginx.conf /srv/paste/stage2.ps1
