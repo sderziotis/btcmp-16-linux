@@ -500,3 +500,34 @@
       user_access_username: user
       user_access_password: 'btcmp16@admin'
       user_access_sudo: true
+
+      # ----------------------------------------------------------------------------
+#  Belt-and-suspenders: fully disable apt auto-update/upgrade on ALL hosts.
+#  (Common base setup already disables the unattended-upgrades service; this
+#  additionally blanks the periodic-update config and stops/masks the
+#  apt-daily timers so nothing re-triggers apt mid-lab.)
+# ----------------------------------------------------------------------------
+- name: Disable apt auto-update everywhere
+  hosts: uavm,targetvm,router,man
+  become: true
+  tasks:
+    - name: Disable unattended upgrades in apt periodic config
+      ansible.builtin.copy:
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          APT::Periodic::Update-Package-Lists "0";
+          APT::Periodic::Unattended-Upgrade "0";
+
+    - name: Disable apt daily timers
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: stopped
+        enabled: false
+        masked: true
+      loop:
+        - apt-daily.timer
+        - apt-daily-upgrade.timer
+      failed_when: false
