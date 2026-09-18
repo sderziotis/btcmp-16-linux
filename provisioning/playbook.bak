@@ -82,21 +82,6 @@
         state: present
         update_cache: 'yes'
 
-    # apt starts suricata/snort automatically right after install. Stop and
-    # disable them here, immediately, so they don't sit running (and eating
-    # RAM) through the rest of provisioning — especially the Timesketch
-    # stack below, which is memory-tight already.
-    - name: Stop and disable IDS daemons
-      ansible.builtin.systemd:
-        name: "{{ item }}"
-        state: stopped
-        enabled: false
-      loop:
-        - suricata
-        - snort
-        - snortd
-      failed_when: false
-
   # ─── Docker ─────────────────────────────────────────────────
 
     - name: Create Docker apt keyring directory
@@ -159,7 +144,6 @@
 
     - name: Create forensic container (stopped)
       ansible.builtin.shell: |
-        docker rm -f forensic-container 2>/dev/null || true
         docker run --name forensic-container forensic-lab:latest echo "ready"
 
     - name: Remove tar file
@@ -490,6 +474,17 @@
         mode: '0644'
 
 # ─── Module 9 (DF-9) ─── Achilleas edit
+
+    - name: Stop and disable IDS daemons
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: stopped
+        enabled: false
+      loop:
+        - suricata
+        - snort
+        - snortd
+      failed_when: false
 
     - name: Create df9 directory in user home
       ansible.builtin.file:
