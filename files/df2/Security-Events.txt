@@ -1,0 +1,304 @@
+Security Event Log export  |  Host: WIN11-VIC
+Source: wevtutil epl Security  ->  Get-WinEvent | Format-List
+======================================================================
+
+TimeCreated : 2025-11-18 08:02:11
+Id          : 4624
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account was successfully logged on. Logon Type: 2 (Interactive). Account Name: j.almeida. Account Domain: HR. Source Network Address: 192.168.10.55.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:02:11
+Id          : 4634
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account was logged off. Account Name: j.almeida. Logon Type: 2.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:13
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:20
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:23
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:29
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:33
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:37
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:46
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:49
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:55
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:07:58
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:06
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:11
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:17
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:21
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:28
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:34
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:37
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:39
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:42
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:46
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:08:55
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:01
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:09
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:16
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:19
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:26
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:28
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:31
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:33
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:35
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:38
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:43
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:46
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:51
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:09:54
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:10:02
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:10:04
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:10:09
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:10:11
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:10:19
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:10:25
+Id          : 4625
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account failed to log on. Logon Type: 3 (Network). Account Name: Administrator. Source Network Address: 10.10.14.8. Failure Reason: Unknown user name or bad password. Status: 0xC000006A. Workstation Name: KALI.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:10:30
+Id          : 4624
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : An account was successfully logged on. Logon Type: 3 (Network). Account Name: Administrator. Account Domain: WIN11-VIC. Source Network Address: 10.10.14.8. Logon ID: 0x3E9A41.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:10:30
+Id          : 4672
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : Special privileges assigned to new logon. Account Name: Administrator. Privileges: SeDebugPrivilege, SeTcbPrivilege, SeBackupPrivilege.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:11:01
+Id          : 7045
+Provider    : Service Control Manager
+Level       : Information
+Message     : A service was installed in the system. Service Name: WinTel Update Svc. Service File Name: C:\Windows\Temp\wintelsvc.exe -k netsvc. Service Type: user mode service. Start Type: auto start. Account: LocalSystem.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:11:19
+Id          : 4720
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : A user account was created. New Account Name: svc_helpdesk. Account Domain: WIN11-VIC. Created by: Administrator.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:11:22
+Id          : 4732
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : A member was added to a security-enabled local group. Group Name: Administrators. Member: WIN11-VIC\svc_helpdesk. By: Administrator.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:11:24
+Id          : 4738
+Provider    : Microsoft-Windows-Security-Auditing
+Level       : Information
+Message     : A user account was changed. Target Account: svc_helpdesk. PasswordNeverExpires set. Changed by: Administrator.
+----------------------------------------------------------------------
+TimeCreated : 2025-11-18 12:12:24
+Id          : 1102
+Provider    : Microsoft-Windows-Eventlog
+Level       : Information
+Message     : The audit log was cleared. Subject Account Name: Administrator. Subject Domain: WIN11-VIC. Logon ID: 0x3E9A41.
+----------------------------------------------------------------------

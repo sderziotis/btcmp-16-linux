@@ -1,0 +1,5 @@
+Deployment notes - Q3 tooling refresh
+-------------------------------------
+Reminder for the on-call team: do NOT use IEX to run remote content in
+production runbooks. Ticket OPS-4471 tracks removal of the last three
+Invoke-Expression calls from the imaging scripts. Owner: S. Derziotis.

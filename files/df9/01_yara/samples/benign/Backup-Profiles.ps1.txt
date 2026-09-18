@@ -1,0 +1,6 @@
+<#  Backup-Profiles.ps1 - nightly roaming profile sync (IT Ops) #>
+param([string]$Share = "\\fileserv01\profiles$")
+$w = New-Object Net.WebClient          # <- shared token: Net.WebClient
+$w.DownloadFile("http://intranet.corp.local/policy.xml","$env:TEMP\policy.xml")
+Get-ChildItem $Share | ForEach-Object { Copy-Item $_.FullName -Destination D:\bkp }
+Write-EventLog -LogName Application -Source Backup -EventId 1000 -Message "done"

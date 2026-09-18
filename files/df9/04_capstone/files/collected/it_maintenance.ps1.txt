@@ -1,0 +1,19 @@
+# IT Maintenance - Weekly disk cleanup on WIN-FIN-07
+# Owner: helpdesk
+
+$LogPath = "C:\Windows\Logs\maintenance.log"
+
+function Clear-TempFiles {
+    $paths = @("$env:TEMP", "C:\Windows\Temp", "C:\Windows\SoftwareDistribution\Download")
+    foreach ($p in $paths) {
+        Get-ChildItem $p -Recurse -ErrorAction SilentlyContinue |
+            Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-7) } |
+            Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+    }
+}
+
+function Write-Log { param($msg) Add-Content $LogPath "$(Get-Date) $msg" }
+
+Write-Log "Starting maintenance"
+Clear-TempFiles
+Write-Log "Done"

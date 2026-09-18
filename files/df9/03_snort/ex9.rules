@@ -1,0 +1,1 @@
+alert tcp any any -> any any (msg:"EX9 beacon URI"; flow:established,to_server; content:"/api/v2/telemetry"; ______; sid:2000009; rev:1;)

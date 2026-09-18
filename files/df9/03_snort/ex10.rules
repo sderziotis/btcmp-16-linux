@@ -1,0 +1,1 @@
+alert tcp any any -> any any (msg:"EX10 campaign id in POST body"; flow:established,to_server; content:"id=0x5A"; http_client_body; nocase; sid:2000010; rev:1;)

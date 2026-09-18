@@ -1,0 +1,38 @@
+# DF-13.3 "paste" service — the smallest possible static host for stage2.ps1.
+# nginx:alpine, read-only root FS, NO logs, no extra tooling.
+#
+# CONTENT IS BAKED INTO THE IMAGE (see Dockerfile.paste) — this compose file
+# bind-mounts NOTHING. Once `paste-local:latest` is built, the provisioning
+# play removes the host-side source dir (/opt/paste), so the served files are
+# not readable under /opt on uavm. (A docker-admin can still read them out of
+# the running container via `docker exec`/`docker cp` — see Dockerfile.paste and
+# the solution-writeup "Range integrity" note.)
+#
+# NOT published to a host port: uavm already runs Timesketch (DF-14) on host
+# port 80, so publishing 80 here would collide. Instead the container gets a
+# FIXED IP on its own host-local docker bridge (172.28.0.10) and /etc/hosts maps
+# raw.pastebox.lab -> that IP. The bridge is reachable from uavm itself but not
+# from targetvm or the LAN, so the service stays effectively uavm-only. The
+# macro-decoded URL keeps default port 80.
+services:
+  paste:
+    image: paste-local:latest
+    container_name: paste
+    restart: unless-stopped
+    read_only: true
+    logging:
+      driver: "none"          # keep no container logs
+    networks:
+      pastenet:
+        ipv4_address: 172.28.0.10
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+
+networks:
+  pastenet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24

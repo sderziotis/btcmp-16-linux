@@ -1,0 +1,13 @@
+# Backup job runner - Finance shares
+# Schedule: daily 02:00 via Task Scheduler (BackupJob-Finance)
+
+param([string]$Target = "\\backupsrv01\fin_archive$")
+
+$w = New-Object Net.WebClient
+$w.DownloadFile("http://intranet.corp.local/backup/policy.xml","$env:TEMP\policy.xml")
+[xml]$cfg = Get-Content "$env:TEMP\policy.xml"
+
+$src = "D:\Finance"
+$dst = Join-Path $Target (Get-Date -Format "yyyy-MM-dd")
+robocopy $src $dst /MIR /R:3 /W:5 /LOG:"$env:TEMP\backup.log"
+Write-EventLog -LogName Application -Source "BackupJob" -EventId 1000 -Message "Backup done"

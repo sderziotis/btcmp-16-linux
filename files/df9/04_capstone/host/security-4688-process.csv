@@ -1,0 +1,18 @@
+TimeCreated,SubjectUserName,NewProcessName,ParentProcessName,CommandLine
+2023-11-19 09:01:14,CORP\a.spanos,C:\Windows\explorer.exe,C:\Windows\System32\userinit.exe,explorer.exe
+2023-11-19 09:02:05,CORP\a.spanos,C:\Program Files\Microsoft Office\EXCEL.EXE,C:\Windows\explorer.exe,"""EXCEL.EXE"" ""D:\Finance\Q3_Report.xlsx"""
+2023-11-19 09:45:10,CORP\svc_sql,C:\Program Files\Microsoft SQL Server\MSSQL.EXE,C:\Windows\System32\services.exe,sqlservr.exe -sMSSQLSERVER
+2023-11-19 10:12:44,CORP\svc_backup,C:\Program Files\Veeam\VeeamAgent.exe,C:\Windows\System32\services.exe,VeeamAgent.exe --job nightly
+2023-11-19 12:45:02,NT AUTHORITY\NETWORK SERVICE,C:\Windows\System32\wsmprovhost.exe,C:\Windows\System32\svchost.exe,wsmprovhost.exe -Embedding
+2023-11-19 12:45:05,CORP\a.spanos,C:\Windows\System32\cmd.exe,C:\Windows\System32\wsmprovhost.exe,cmd.exe /c Get-PSDrive C
+2023-11-19 12:45:09,CORP\a.spanos,C:\Windows\System32\cmd.exe,C:\Windows\System32\wsmprovhost.exe,cmd.exe /c Get-Service WinRM
+2023-11-19 13:20:02,NT AUTHORITY\NETWORK SERVICE,C:\Windows\System32\wsmprovhost.exe,C:\Windows\System32\svchost.exe,wsmprovhost.exe -Embedding
+2023-11-19 13:20:04,CORP\svc_backup,C:\Windows\System32\cmd.exe,C:\Windows\System32\wsmprovhost.exe,cmd.exe /c whoami /all
+2023-11-19 13:20:05,CORP\svc_backup,C:\Windows\System32\whoami.exe,C:\Windows\System32\cmd.exe,whoami /all
+2023-11-19 13:20:08,CORP\svc_backup,C:\Windows\System32\cmd.exe,C:\Windows\System32\wsmprovhost.exe,cmd.exe /c hostname
+2023-11-19 13:20:14,CORP\svc_backup,C:\Windows\System32\net.exe,C:\Windows\System32\wsmprovhost.exe,"net group ""Domain Admins"" /domain"
+2023-11-19 13:20:14,CORP\svc_backup,C:\Windows\System32\net1.exe,C:\Windows\System32\net.exe,"net1 group ""Domain Admins"" /domain"
+2023-11-19 13:20:18,CORP\svc_backup,C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe,C:\Windows\System32\wsmprovhost.exe,powershell.exe -nop -enc JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4A
+2023-11-19 13:20:22,CORP\svc_backup,C:\Windows\System32\schtasks.exe,C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe,"schtasks /Create /SC MINUTE /MO 30 /TN WindowsUpdateHelper /TR ""powershell -nop -w hidden -f %APPDATA%\Microsoft\Windows\svchost_helper.ps1"" /F"
+2023-11-19 14:02:11,CORP\p.fiskilis,C:\Windows\explorer.exe,C:\Windows\System32\userinit.exe,explorer.exe
+2023-11-19 14:05:20,CORP\p.fiskilis,C:\Program Files\Microsoft Office\OUTLOOK.EXE,C:\Windows\explorer.exe,"""OUTLOOK.EXE"""

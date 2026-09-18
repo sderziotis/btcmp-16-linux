@@ -1,0 +1,5 @@
+alert tcp any any -> any any (msg:"EX11a host header"; flow:established,to_server; content:"Host|3A| cdn.nightjar-update.example"; http_header; nocase; sid:2000111; rev:1;)
+alert tcp any any -> any any (msg:"EX11b method and URI"; flow:established,to_server; content:"POST"; http_method; content:"/api/v2/telemetry"; http_uri; sid:2000112; rev:1;)
+alert tcp any any -> any any (msg:"EX11c beacon URI"; flow:established,to_server; content:"/api/v2/telemetry"; http_uri; sid:2000113; rev:1;)
+alert tcp any any -> any any (msg:"EX11d PE in response"; flow:established,to_client; file_data; content:"MZ"; depth:2; sid:2000114; rev:1;)
+alert tcp any any -> any any (msg:"EX11e legacy user-agent"; flow:established,to_server; content:"MSIE 7.0"; http_header; sid:2000115; rev:1;)
