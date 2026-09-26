@@ -452,6 +452,14 @@
         regexp: '^OPENSEARCH_MEM_USE_GB='
         line: 'OPENSEARCH_MEM_USE_GB=2'
 
+    # Free RAM for Timesketch's first boot (OpenSearch init + DB migrations).
+    # Jupyter is brought back up once the trainee user has been created.
+    - name: Stop Jupyter while Timesketch initialises
+      ansible.builtin.command: docker compose stop
+      args:
+        chdir: /opt/jupyter
+      changed_when: true
+
     - name: Start Timesketch stack
       ansible.builtin.command: docker compose up -d
       args:
@@ -471,11 +479,17 @@
       retries: 60
       delay: 5
 
+    # nginx answers before timesketch-web has finished its first-boot init
+    # (DB migrations, OpenSearch index setup), and `exec` can be SIGKILLed
+    # (rc 137) while the container settles or under memory pressure. Retry.
     - name: Check existing Timesketch users
       ansible.builtin.command: docker compose exec -T timesketch-web tsctl list-users
       args:
         chdir: /opt/timesketch
       register: ts_users
+      until: ts_users.rc == 0
+      retries: 30
+      delay: 10
       changed_when: false
 
     # create-user updates the password if the user already exists, but the
@@ -488,6 +502,12 @@
       args:
         chdir: /opt/timesketch
       when: "'trainee' not in ts_users.stdout"
+
+    - name: Start Jupyter again now that Timesketch is up
+      ansible.builtin.command: docker compose up -d
+      args:
+        chdir: /opt/jupyter
+      changed_when: true
 
   # ─── DF-14 evidence (pre-staged for trainee ingestion) ──────
   # Files are NOT auto-imported — uploading them into Timesketch IS the
