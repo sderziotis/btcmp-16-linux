@@ -140,6 +140,35 @@
         state: started
         enabled: true
 
+    # Lower Docker MTU to 1440 (default bridge + new user-defined networks)
+    # so container traffic isn't fragmented/dropped on the range overlay.
+    - name: Create /etc/docker directory
+      ansible.builtin.file:
+        path: /etc/docker
+        state: directory
+        mode: '0755'
+
+    - name: Configure Docker daemon MTU (1440)
+      ansible.builtin.copy:
+        dest: /etc/docker/daemon.json
+        content: |
+          {
+            "mtu": 1440,
+            "default-network-opts": {
+              "bridge": {
+                "com.docker.network.driver.mtu": "1440"
+              }
+            }
+          }
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Restart Docker to apply daemon.json
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
+
     - name: Add user to docker group
       ansible.builtin.user:
         name: user
